@@ -3,6 +3,10 @@ package com.dsa.tracker.entity;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import com.dsa.tracker.dto.SolutionDetails;
 
 @Entity
 @Table(name = "problems")
@@ -39,6 +43,10 @@ public class Problem {
 
     @Column(name = "date_solved", nullable = false)
     private LocalDate dateSolved;
+
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private List<SolutionDetails> alternateSolutions = new ArrayList<>();
 
     @com.fasterxml.jackson.annotation.JsonIgnore
     @OneToMany(mappedBy = "problem", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -79,6 +87,9 @@ public class Problem {
     public LocalDate getDateSolved() { return dateSolved; }
     public void setDateSolved(LocalDate dateSolved) { this.dateSolved = dateSolved; }
 
+    public List<SolutionDetails> getAlternateSolutions() { return alternateSolutions; }
+    public void setAlternateSolutions(List<SolutionDetails> alternateSolutions) { this.alternateSolutions = alternateSolutions; }
+
     public List<Revision> getRevisions() { return revisions; }
     public void setRevisions(List<Revision> revisions) { this.revisions = revisions; }
 
@@ -96,6 +107,7 @@ public class Problem {
         public Builder code(String v) { p.code = v; return this; }
         public Builder codeLanguage(String v) { p.codeLanguage = v; return this; }
         public Builder dateSolved(LocalDate v) { p.dateSolved = v; return this; }
+        public Builder alternateSolutions(List<SolutionDetails> v) { p.alternateSolutions = v; return this; }
         public Problem build() { return p; }
     }
 }

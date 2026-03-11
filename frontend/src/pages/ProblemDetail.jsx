@@ -12,6 +12,7 @@ export default function ProblemDetail() {
   const [problem, setProblem] = useState(null);
   const [revisions, setRevisions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState(-1);
 
   useEffect(() => {
     Promise.all([getProblem(id), getRevisionsByProblem(id)])
@@ -50,6 +51,10 @@ export default function ProblemDetail() {
     if (isPast(d)) return { label: 'Overdue', cls: 'badge-hard' };
     return { label: format(d, 'MMM d'), cls: 'badge-pending' };
   };
+
+  const currentSolution = activeTab === -1 
+    ? { title: 'Main Solution', approach: problem.approach, code: problem.code, language: problem.codeLanguage }
+    : problem.alternateSolutions[activeTab];
 
   return (
     <div className="fade-in">
@@ -107,66 +112,85 @@ export default function ProblemDetail() {
         </div>
       </div>
 
-      {/* Detail Grid */}
-      <div className="detail-grid">
-        {/* Approach + Notes */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div className="card">
-            <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.75rem' }}>
-              💡 Approach
-            </h3>
-            {problem.approach ? (
-              <p style={{ fontSize: '0.875rem', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{problem.approach}</p>
-            ) : (
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>No approach recorded.</p>
-            )}
-          </div>
-
-          <div className="card">
-            <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.75rem' }}>
-              📝 Notes
-            </h3>
-            {problem.notes ? (
-              <p style={{ fontSize: '0.875rem', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{problem.notes}</p>
-            ) : (
-              <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>No notes recorded.</p>
-            )}
-          </div>
-        </div>
-
-        {/* Code Viewer */}
-        <div className="code-container">
-          <div className="code-header">
-            <span style={{ fontWeight: 600 }}>Solution Code</span>
-            <span className="badge badge-day">{problem.codeLanguage || 'java'}</span>
-          </div>
-          {problem.code ? (
-            <Editor
-              height="650px"
-              language={problem.codeLanguage || 'java'}
-              value={problem.code}
-              theme="vs-dark"
-              options={{
-                readOnly: true,
-                fontSize: 14,
-                minimap: { enabled: false },
-                scrollBeyondLastLine: false,
-                wordWrap: 'on',
-                fontFamily: 'JetBrains Mono, monospace',
-                padding: { top: 16 },
-                lineNumbers: 'on',
-                automaticLayout: true,
-                domReadOnly: true,
-                cursorStyle: 'line',
-              }}
-            />
+      {/* Detail Section */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
+        <div className="card">
+          <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.75rem' }}>
+            💡 Approach ({currentSolution?.title || 'Main'})
+          </h3>
+          {currentSolution?.approach ? (
+            <p style={{ fontSize: '0.875rem', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{currentSolution.approach}</p>
           ) : (
-            <div style={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
-              background: '#1e1e1e', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-              No code saved for this problem.
-            </div>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>No approach recorded for this solution.</p>
           )}
         </div>
+
+        <div className="card">
+          <h3 style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '0.75rem' }}>
+            📝 Overall Notes
+          </h3>
+          {problem.notes ? (
+            <p style={{ fontSize: '0.875rem', lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{problem.notes}</p>
+          ) : (
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>No notes recorded.</p>
+          )}
+        </div>
+      </div>
+
+      {/* Tabs */}
+      {(problem.alternateSolutions && problem.alternateSolutions.length > 0) && (
+        <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', overflowX: 'auto', paddingBottom: '4px' }}>
+          <button 
+            className={`btn ${activeTab === -1 ? 'btn-primary' : 'btn-ghost'}`}
+            style={{ whiteSpace: 'nowrap' }}
+            onClick={() => setActiveTab(-1)}
+          >
+            💻 Main Solution
+          </button>
+          {problem.alternateSolutions.map((sol, idx) => (
+            <button key={idx}
+              className={`btn ${activeTab === idx ? 'btn-primary' : 'btn-ghost'}`}
+              style={{ whiteSpace: 'nowrap' }}
+              onClick={() => setActiveTab(idx)}
+            >
+              💻 {sol.title || `Solution ${idx + 2}`}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Code Viewer (Full Width) */}
+      <div className="code-container" style={{ width: '100%', marginBottom: '2rem' }}>
+        <div className="code-header">
+          <span style={{ fontWeight: 600 }}>{currentSolution?.title || 'Solution Code'}</span>
+          <span className="badge badge-day">{currentSolution?.language || 'java'}</span>
+        </div>
+        {currentSolution?.code ? (
+          <Editor
+            height="500px"
+            language={currentSolution.language || 'java'}
+            value={currentSolution.code}
+            theme="vs-dark"
+            options={{
+              readOnly: true,
+              fontSize: 14,
+              minimap: { enabled: false },
+              scrollBeyondLastLine: false,
+              wordWrap: 'on',
+              fontFamily: 'JetBrains Mono, monospace',
+              padding: { top: 16, bottom: 16 },
+              lineNumbers: 'on',
+              automaticLayout: true,
+              domReadOnly: true,
+              cursorStyle: 'line',
+            }}
+          />
+        ) : (
+          <div style={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: '#1e1e1e', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+            No code saved for this solution.
+          </div>
+        )}
       </div>
     </div>
   );

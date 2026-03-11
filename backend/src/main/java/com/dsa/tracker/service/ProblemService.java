@@ -35,6 +35,7 @@ public class ProblemService {
                 .code(request.getCode())
                 .codeLanguage(request.getCodeLanguage() != null ? request.getCodeLanguage() : "java")
                 .dateSolved(request.getDateSolved())
+                .alternateSolutions(request.getAlternateSolutions() != null ? request.getAlternateSolutions() : new java.util.ArrayList<>())
                 .build();
 
         Problem saved = problemRepository.save(problem);
@@ -87,6 +88,7 @@ public class ProblemService {
         problem.setCode(request.getCode());
         problem.setCodeLanguage(request.getCodeLanguage());
         problem.setDateSolved(request.getDateSolved());
+        problem.setAlternateSolutions(request.getAlternateSolutions() != null ? request.getAlternateSolutions() : new java.util.ArrayList<>());
         return problemRepository.save(problem);
     }
 

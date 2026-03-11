@@ -24,11 +24,34 @@ export default function AddProblem() {
     code: '',
     codeLanguage: 'java',
     dateSolved: today,
+    alternateSolutions: [],
   });
   const [loading, setLoading] = useState(false);
   const [customTopic, setCustomTopic] = useState(false);
 
   const handleChange = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const addAlternateSolution = () => {
+    setForm(f => ({
+      ...f,
+      alternateSolutions: [...(f.alternateSolutions || []), { title: '', approach: '', code: '', codeLanguage: 'java' }]
+    }));
+  };
+
+  const removeAlternateSolution = (idx) => {
+    setForm(f => ({
+      ...f,
+      alternateSolutions: f.alternateSolutions.filter((_, i) => i !== idx)
+    }));
+  };
+
+  const updateAlternateSolution = (idx, field, value) => {
+    setForm(f => {
+      const newAlts = [...f.alternateSolutions];
+      newAlts[idx] = { ...newAlts[idx], [field]: value };
+      return { ...f, alternateSolutions: newAlts };
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -148,6 +171,53 @@ export default function AddProblem() {
               />
             </div>
           </div>
+        </div>
+
+        {/* Dynamic Alternate Solutions Block Here */}
+        {form.alternateSolutions?.length > 0 && (
+          <div style={{ marginTop: '2rem' }}>
+            <h3 style={{ fontSize: '1.1rem', fontWeight: 600, marginBottom: '1rem' }}>Alternative Solutions</h3>
+            {form.alternateSolutions.map((sol, idx) => (
+              <div key={idx} className="card" style={{ marginBottom: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', padding: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+                  <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>Solution {idx + 2}</span>
+                  <button type="button" className="btn btn-danger" onClick={() => removeAlternateSolution(idx)}>Remove</button>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1.5rem' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                    <div className="form-group">
+                      <label className="form-label" style={{ fontSize: '0.75rem' }}>Solution Title</label>
+                      <input className="input" placeholder="e.g. Optimal Approach" value={sol.title || ''} onChange={(e) => updateAlternateSolution(idx, 'title', e.target.value)} />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label" style={{ fontSize: '0.75rem' }}>Language</label>
+                      <select className="select" value={sol.codeLanguage || 'java'} onChange={(e) => updateAlternateSolution(idx, 'codeLanguage', e.target.value)}>
+                        {LANGUAGES.map(l => <option key={l} value={l}>{l.charAt(0).toUpperCase() + l.slice(1)}</option>)}
+                      </select>
+                    </div>
+                    <div className="form-group" style={{ flex: 1, marginBottom: 0 }}>
+                      <label className="form-label" style={{ fontSize: '0.75rem' }}>Approach</label>
+                      <textarea className="textarea" style={{ height: '100%', minHeight: '120px' }} placeholder="Explain alternative approach..." value={sol.approach || ''} onChange={(e) => updateAlternateSolution(idx, 'approach', e.target.value)} />
+                    </div>
+                  </div>
+                  <div className="code-container" style={{ height: '350px' }}>
+                    <Editor
+                      height="350px"
+                      language={sol.codeLanguage || 'java'}
+                      value={sol.code || ''}
+                      onChange={(val) => updateAlternateSolution(idx, 'code', val || '')}
+                      theme="vs-dark"
+                      options={{ fontSize: 13, minimap: { enabled: false }, automaticLayout: true, wordWrap: 'on' }}
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div style={{ marginTop: '1.5rem' }}>
+          <button type="button" className="btn btn-secondary" onClick={addAlternateSolution}>+ Add Alternative Solution</button>
         </div>
 
         {/* Submit */}

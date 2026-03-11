@@ -4,6 +4,7 @@ import com.dsa.tracker.entity.Problem;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 public class ProblemRequest {
 
@@ -21,6 +22,7 @@ public class ProblemRequest {
     private String notes;
     private String code;
     private String codeLanguage = "java";
+    private List<SolutionDetails> alternateSolutions;
 
     @NotNull(message = "Date solved is required")
     private LocalDate dateSolved;
@@ -48,6 +50,9 @@ public class ProblemRequest {
 
     public String getCodeLanguage() { return codeLanguage; }
     public void setCodeLanguage(String codeLanguage) { this.codeLanguage = codeLanguage; }
+
+    public List<SolutionDetails> getAlternateSolutions() { return alternateSolutions; }
+    public void setAlternateSolutions(List<SolutionDetails> alternateSolutions) { this.alternateSolutions = alternateSolutions; }
 
     public LocalDate getDateSolved() { return dateSolved; }
     public void setDateSolved(LocalDate dateSolved) { this.dateSolved = dateSolved; }
