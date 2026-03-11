@@ -108,39 +108,47 @@ export default function ProblemsList() {
           <table>
             <thead>
               <tr>
-                <th>#</th>
-                <th>Title</th>
-                <th>Topic</th>
-                <th>Difficulty</th>
-                <th>Date Solved</th>
-                <th>Notes</th>
+                <th style={{ padding: '0.75rem 0.5rem', width: '3%' }}></th>
+                <th style={{ padding: '0.75rem 1rem' }}>Title</th>
+                <th style={{ padding: '0.75rem 1rem', width: '20%' }}>Review Topics</th>
+                <th style={{ padding: '0.75rem 1rem', width: '15%' }}>Difficulty</th>
+                <th style={{ padding: '0.75rem 1rem', width: '15%' }}>Date</th>
                 <th></th>
               </tr>
             </thead>
             <tbody>
               {problems.map((p, i) => (
-                <tr key={p.id} onClick={() => navigate(`/problems/${p.id}`)}>
-                  <td style={{ color: 'var(--text-muted)', width: 40 }}>{i + 1}</td>
-                  <td>
-                    <div style={{ fontWeight: 600 }}>{p.title}</div>
-                    {p.problemLink && (
-                      <a href={p.problemLink} target="_blank" rel="noreferrer"
-                        style={{ fontSize: '0.72rem', color: 'var(--accent-blue)' }}
-                        onClick={(e) => e.stopPropagation()}>
-                        ↗ LeetCode
-                      </a>
-                    )}
+                <tr key={p.id} onClick={() => navigate(`/problems/${p.id}`)} style={{ borderBottom: '1px solid var(--border)' }}>
+                  <td style={{ padding: '0.875rem 0.5rem', textAlign: 'center' }}>
+                    <svg viewBox="0 0 24 24" width="16" height="16" stroke="var(--accent-teal)" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
                   </td>
-                  <td><span className="tag">{p.topic}</span></td>
-                  <td><DifficultyBadge difficulty={p.difficulty} /></td>
-                  <td style={{ color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
+                  <td style={{ padding: '0.875rem 1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <span style={{ color: 'var(--text-primary)', fontSize: '0.9rem', fontWeight: 500 }}>
+                        {i + 1}. {p.title}
+                      </span>
+                      {p.problemLink && (
+                        <a href={p.problemLink} target="_blank" rel="noreferrer"
+                          style={{ color: 'var(--text-muted)' }}
+                          title="View on LeetCode"
+                          onClick={(e) => e.stopPropagation()}>
+                          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <line x1="10" y1="14" x2="21" y2="3"></line>
+                          </svg>
+                        </a>
+                      )}
+                    </div>
+                  </td>
+                  <td style={{ padding: '0.875rem 1rem' }}><span className="tag" style={{ fontSize: '0.7rem' }}>{p.topic}</span></td>
+                  <td style={{ padding: '0.875rem 1rem', color: `var(--${p.difficulty.toLowerCase()})`, fontSize: '0.85rem' }}>
+                    {p.difficulty === 'MEDIUM' ? 'Med.' : p.difficulty === 'EASY' ? 'Easy' : 'Hard'}
+                  </td>
+                  <td style={{ padding: '0.875rem 1rem', color: 'var(--text-secondary)', fontSize: '0.85rem', whiteSpace: 'nowrap' }}>
                     {p.dateSolved ? format(new Date(p.dateSolved), 'MMM d, yyyy') : '—'}
-                  </td>
-                  <td style={{ maxWidth: 200 }}>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)',
-                      display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
-                      {p.notes || '—'}
-                    </span>
                   </td>
                   <td>
                     <button className="btn btn-danger" style={{ padding: '4px 10px', fontSize: '0.75rem' }}

@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import Sidebar from './components/Sidebar';
+import TopNavbar from './components/TopNavbar';
 import Dashboard from './pages/Dashboard';
 import ProblemsList from './pages/ProblemsList';
 import AddProblem from './pages/AddProblem';
@@ -24,7 +24,7 @@ export default function App() {
         }}
       />
       <div className="app-layout">
-        <Sidebar />
+        <TopNavbar />
         <main className="main-content">
           <Routes>
             <Route path="/" element={<Dashboard />} />
