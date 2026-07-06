@@ -1,0 +1,19 @@
+name: Keep Backend Alive
+
+on:
+  schedule:
+    # Runs every 14 minutes to prevent Render free tier cold starts
+    - cron: '*/14 * * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Backend
+        run: |
+          echo "Pinging backend to prevent cold start..."
+          curl -fsS --max-time 120 --retry 3 --retry-delay 10 \
+            "https://dsa-tracker-api-nnl2.onrender.com/api/problems?page=0&size=1" \
+            -o /dev/null -w "HTTP Status: %{http_code}\nTime: %{time_total}s\n" || true
+          echo "Ping complete!"
