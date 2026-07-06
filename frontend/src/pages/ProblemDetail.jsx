@@ -237,7 +237,7 @@ export default function ProblemDetail() {
     return { label: format(d, 'MMM d'), cls: 'badge-pending' };
   };
 
-  const currentSolution = activeTab === -1 
+  const currentSolution = activeTab === -1
     ? { title: 'Main Solution', approach: problem.approach, code: problem.code, language: problem.codeLanguage }
     : problem.alternateSolutions[activeTab];
 
@@ -260,7 +260,7 @@ export default function ProblemDetail() {
               {problem.problemLink && (
                 <a href={problem.problemLink} target="_blank" rel="noreferrer"
                   className="btn btn-ghost" style={{ padding: '3px 10px', fontSize: '0.75rem' }}>
-                  ↗ LeetCode
+                  ↗ Coding Platform
                 </a>
               )}
             </div>
@@ -325,7 +325,7 @@ export default function ProblemDetail() {
       {/* Tabs */}
       {(problem.alternateSolutions && problem.alternateSolutions.length > 0) && (
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', overflowX: 'auto', paddingBottom: '4px' }}>
-          <button 
+          <button
             className={`btn ${activeTab === -1 ? 'btn-primary' : 'btn-ghost'}`}
             style={{ whiteSpace: 'nowrap' }}
             onClick={() => setActiveTab(-1)}
@@ -397,8 +397,10 @@ export default function ProblemDetail() {
             }}
           />
         ) : (
-          <div style={{ height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: '#1e1e1e', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
+          <div style={{
+            height: 200, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            background: '#1e1e1e', color: 'var(--text-muted)', fontSize: '0.875rem'
+          }}>
             No code saved for this solution.
           </div>
         )}
