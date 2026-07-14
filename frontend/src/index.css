@@ -850,3 +850,208 @@ tbody tr:hover {
   background: var(--border);
   margin: 1.25rem 0;
 }
+
+/* ===== Passkey Gate ===== */
+.passkey-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  overflow: hidden;
+}
+
+.passkey-glow {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 161, 22, 0.12) 0%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  animation: passkey-pulse 4s ease-in-out infinite;
+}
+
+@keyframes passkey-pulse {
+  0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+}
+
+.passkey-card {
+  position: relative;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2.5rem 2rem 2rem;
+  width: 340px;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: passkey-fadeIn 0.5s ease;
+}
+
+@keyframes passkey-fadeIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.96); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.passkey-card.shake {
+  animation: passkey-shake 0.5s ease;
+}
+
+@keyframes passkey-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-12px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-8px); }
+  80% { transform: translateX(6px); }
+}
+
+.passkey-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(255, 161, 22, 0.1);
+  color: var(--accent-orange);
+  margin-bottom: 1.25rem;
+}
+
+.passkey-title {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.35rem;
+}
+
+.passkey-subtitle {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.passkey-dots {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.passkey-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  background: transparent;
+  transition: all 0.2s ease;
+}
+
+.passkey-dot.filled {
+  background: var(--accent-orange);
+  border-color: var(--accent-orange);
+  box-shadow: 0 0 8px rgba(255, 161, 22, 0.4);
+}
+
+.passkey-dot.error {
+  border-color: var(--hard);
+  background: transparent;
+}
+
+.passkey-dot.error.filled {
+  background: var(--hard);
+  border-color: var(--hard);
+  box-shadow: 0 0 8px rgba(255, 45, 85, 0.4);
+}
+
+.passkey-error {
+  font-size: 0.8rem;
+  color: var(--hard);
+  height: 1.25rem;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  margin-bottom: 0.5rem;
+}
+
+.passkey-error.visible {
+  opacity: 1;
+}
+
+.passkey-numpad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  max-width: 240px;
+  margin: 0 auto 1.25rem;
+}
+
+.numpad-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  margin: 0 auto;
+}
+
+.numpad-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent-orange);
+  transform: scale(1.06);
+}
+
+.numpad-btn:active {
+  transform: scale(0.95);
+  background: rgba(255, 161, 22, 0.15);
+}
+
+.numpad-action {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.numpad-action:hover {
+  color: var(--text-primary);
+}
+
+.passkey-submit {
+  width: 100%;
+  padding: 0.85rem;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent-orange), #e6910f);
+  color: #000;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.5px;
+}
+
+.passkey-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(255, 161, 22, 0.35);
+}
+
+.passkey-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.passkey-submit:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import TopNavbar from './components/TopNavbar';
@@ -7,8 +8,17 @@ import AddProblem from './pages/AddProblem';
 import ProblemDetail from './pages/ProblemDetail';
 import EditProblem from './pages/EditProblem';
 import Revisions from './pages/Revisions';
+import PasskeyGate from './components/PasskeyGate';
 
 export default function App() {
+  const [unlocked, setUnlocked] = useState(
+    () => sessionStorage.getItem('dsa-unlocked') === 'true'
+  );
+
+  if (!unlocked) {
+    return <PasskeyGate onUnlock={() => setUnlocked(true)} />;
+  }
+
   return (
     <BrowserRouter>
       <Toaster
@@ -39,3 +49,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
